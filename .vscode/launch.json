@@ -1,0 +1,45 @@
+{
+    // AIMLAB-Unity-Chai3D-VR - VS Code Launch Configuration
+    // Author: Pi Ko (pi.ko@nyu.edu)
+    // Date: 04 February 2026
+    // Version: v1.0
+    
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug AIMLAB Haptics",
+            "type": "cppvsdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/bin/Debug/aimlab-haptics.exe",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}/build/bin/Debug",
+            "environment": [],
+            "console": "integratedTerminal",
+            "preLaunchTask": "Build Project (Debug)"
+        },
+        {
+            "name": "Run AIMLAB Haptics (Release)",
+            "type": "cppvsdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/bin/Release/aimlab-haptics.exe",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}/build/bin/Release",
+            "environment": [],
+            "console": "integratedTerminal",
+            "preLaunchTask": "Build Project (Release)"
+        },
+        {
+            "name": "Run Without Building",
+            "type": "cppvsdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/bin/Release/aimlab-haptics.exe",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}/build/bin/Release",
+            "environment": [],
+            "console": "integratedTerminal"
+        }
+    ]
+}

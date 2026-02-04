@@ -1,0 +1,32 @@
+{
+    // AIMLAB-Unity-Chai3D-VR - Recommended VS Code Extensions
+    // Author: Pi Ko (pi.ko@nyu.edu)
+    // Date: 04 February 2026
+    // Version: v1.0
+    
+    "recommendations": [
+        // C++ Development
+        "ms-vscode.cpptools",
+        "ms-vscode.cpptools-extension-pack",
+        
+        // CMake Support
+        "ms-vscode.cmake-tools",
+        "twxs.cmake",
+        
+        // Git Integration
+        "eamodio.gitlens",
+        "mhutchie.git-graph",
+        
+        // Markdown
+        "yzhang.markdown-all-in-one",
+        "DavidAnson.vscode-markdownlint",
+        
+        // PowerShell
+        "ms-vscode.powershell",
+        
+        // Utilities
+        "streetsidesoftware.code-spell-checker",
+        "wayou.vscode-todo-highlight",
+        "gruntfuggly.todo-tree"
+    ]
+}

@@ -1,2 +1,121 @@
+##############################################################################
+# AIMLAB-Unity-Chai3D-VR - Git Attributes Configuration
+#
+# Author: Pi Ko (pi.ko@nyu.edu)
+# Date: 04 February 2026
+# Version: v1.1
+# 
+# Description:
+#   Git attributes for proper handling of line endings and file types
+#   across Windows, macOS, and Linux development environments.
+#
+# Changelog:
+#   v1.1 - 04 February 2026 - Expanded file type handling
+#   v1.0 - (previous) - Basic auto-detection
+#
+##############################################################################
+
 # Auto detect text files and perform LF normalization
 * text=auto
+
+# Source Code - Enforce LF line endings
+*.cpp text eol=lf
+*.h text eol=lf
+*.hpp text eol=lf
+*.c text eol=lf
+*.cc text eol=lf
+*.cxx text eol=lf
+*.hxx text eol=lf
+*.py text eol=lf
+*.cs text eol=lf
+*.java text eol=lf
+
+# CMake and Build Files
+CMakeLists.txt text eol=lf
+*.cmake text eol=lf
+*.in text eol=lf
+Makefile text eol=lf
+
+# Scripts
+*.sh text eol=lf
+*.bash text eol=lf
+*.bat text eol=crlf
+*.cmd text eol=crlf
+*.ps1 text eol=crlf
+
+# Documentation
+*.md text eol=lf
+*.txt text eol=lf
+*.pdf binary
+*.doc binary
+*.docx binary
+
+# Web Files
+*.html text eol=lf
+*.css text eol=lf
+*.js text eol=lf
+*.json text eol=lf
+*.xml text eol=lf
+*.yaml text eol=lf
+*.yml text eol=lf
+
+# Visual Studio / Windows
+*.sln text eol=crlf
+*.vcxproj text eol=crlf
+*.vcxproj.filters text eol=crlf
+*.rc text eol=crlf
+
+# Binary Files
+*.exe binary
+*.dll binary
+*.so binary
+*.dylib binary
+*.lib binary
+*.a binary
+*.obj binary
+*.o binary
+*.pdb binary
+*.ilk binary
+
+# Images
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.bmp binary
+*.ico binary
+*.tga binary
+*.tiff binary
+
+# 3D Models
+*.obj binary
+*.3ds binary
+*.stl binary
+*.fbx binary
+*.dae binary
+*.blend binary
+
+# Audio/Video
+*.wav binary
+*.mp3 binary
+*.ogg binary
+*.flac binary
+*.mp4 binary
+*.avi binary
+*.mov binary
+
+# Archives
+*.zip binary
+*.tar binary
+*.gz binary
+*.7z binary
+*.rar binary
+
+# Unity-specific (for Unity integration)
+*.unity binary
+*.prefab binary
+*.mat binary
+*.asset binary
+*.meta text eol=lf
+*.controller binary
+*.anim binary

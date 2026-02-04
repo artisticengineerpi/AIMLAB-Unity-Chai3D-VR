@@ -1,0 +1,81 @@
+{
+    // AIMLAB-Unity-Chai3D-VR - VS Code Settings
+    // Author: Pi Ko (pi.ko@nyu.edu)
+    // Date: 04 February 2026
+    // Version: v1.0
+    
+    // C++ Configuration
+    "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools",
+    "C_Cpp.default.cppStandard": "c++17",
+    "C_Cpp.default.intelliSenseMode": "windows-msvc-x64",
+    
+    // CMake Configuration
+    "cmake.configureOnOpen": false,
+    "cmake.buildDirectory": "${workspaceFolder}/build",
+    "cmake.generator": "Visual Studio 17 2022",
+    "cmake.preferredGenerators": [
+        "Visual Studio 17 2022"
+    ],
+    "cmake.configureArgs": [
+        "-A",
+        "x64"
+    ],
+    
+    // File Associations
+    "files.associations": {
+        "*.h": "cpp",
+        "*.cpp": "cpp",
+        "*.cmake": "cmake",
+        "CMakeLists.txt": "cmake",
+        "chai3d": "cpp"
+    },
+    
+    // Editor Settings
+    "editor.tabSize": 4,
+    "editor.insertSpaces": true,
+    "editor.rulers": [100],
+    "editor.formatOnSave": false,
+    
+    // Files to Exclude from Explorer
+    "files.exclude": {
+        "**/.git": true,
+        "**/.vs": true,
+        "**/build": true,
+        "**/*.obj": true,
+        "**/*.pdb": true,
+        "**/*.ilk": true
+    },
+    
+    // Search Exclusions
+    "search.exclude": {
+        "**/build": true,
+        "**/bin": true,
+        "**/.git": true,
+        "**/external/chai3d/external": true
+    },
+    
+    // Terminal Configuration
+    "terminal.integrated.defaultProfile.windows": "PowerShell",
+    "terminal.integrated.profiles.windows": {
+        "PowerShell": {
+            "source": "PowerShell",
+            "icon": "terminal-powershell"
+        },
+        "Developer PowerShell for VS 2022": {
+            "path": [
+                "${env:PROGRAMFILES}\\Microsoft Visual Studio\\2022\\Community\\Common7\\Tools\\VsDevCmd.bat",
+                "${env:PROGRAMFILES}\\Microsoft Visual Studio\\2022\\Professional\\Common7\\Tools\\VsDevCmd.bat",
+                "${env:PROGRAMFILES}\\Microsoft Visual Studio\\2022\\Enterprise\\Common7\\Tools\\VsDevCmd.bat"
+            ],
+            "args": [],
+            "icon": "tools"
+        }
+    },
+    
+    // Markdown Preview
+    "markdown.preview.breaks": true,
+    "markdown.preview.linkify": true,
+    
+    // Git Configuration
+    "git.ignoreLimitWarning": true
+}

@@ -1,0 +1,132 @@
+{
+    // AIMLAB-Unity-Chai3D-VR - VS Code Tasks
+    // Author: Pi Ko (pi.ko@nyu.edu)
+    // Date: 04 February 2026
+    // Version: v1.0
+    
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Setup CHAI3D",
+            "type": "shell",
+            "command": "${workspaceFolder}/setup-chai3d.ps1",
+            "problemMatcher": [],
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": true,
+                "panel": "shared"
+            },
+            "detail": "Clone and build CHAI3D library with Haply support"
+        },
+        {
+            "label": "Build Project (Release)",
+            "type": "shell",
+            "command": "${workspaceFolder}/build-project.ps1",
+            "args": [
+                "-Config",
+                "Release"
+            ],
+            "problemMatcher": [
+                "$msCompile"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared"
+            },
+            "detail": "Build AIMLAB haptic application (Release mode)"
+        },
+        {
+            "label": "Build Project (Debug)",
+            "type": "shell",
+            "command": "${workspaceFolder}/build-project.ps1",
+            "args": [
+                "-Config",
+                "Debug"
+            ],
+            "problemMatcher": [
+                "$msCompile"
+            ],
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared"
+            },
+            "detail": "Build AIMLAB haptic application (Debug mode)"
+        },
+        {
+            "label": "Clean Build",
+            "type": "shell",
+            "command": "${workspaceFolder}/build-project.ps1",
+            "args": [
+                "-Clean",
+                "-Config",
+                "Release"
+            ],
+            "problemMatcher": [],
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared"
+            },
+            "detail": "Clean and rebuild project from scratch"
+        },
+        {
+            "label": "Run Application",
+            "type": "shell",
+            "command": "${workspaceFolder}/build/bin/Release/aimlab-haptics.exe",
+            "problemMatcher": [],
+            "group": "test",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": true,
+                "panel": "dedicated"
+            },
+            "detail": "Run the AIMLAB haptic application"
+        },
+        {
+            "label": "Run CHAI3D Demos",
+            "type": "shell",
+            "command": "${workspaceFolder}/run-demos.ps1",
+            "problemMatcher": [],
+            "group": "test",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": true,
+                "panel": "dedicated"
+            },
+            "detail": "Interactive demo launcher menu"
+        },
+        {
+            "label": "CMake Configure",
+            "type": "shell",
+            "command": "cmake",
+            "args": [
+                "..",
+                "-G",
+                "Visual Studio 17 2022",
+                "-A",
+                "x64"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}/build"
+            },
+            "problemMatcher": [],
+            "group": "build",
+            "detail": "Run CMake configuration"
+        }
+    ]
+}
