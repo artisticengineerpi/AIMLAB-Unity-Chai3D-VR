@@ -3,7 +3,7 @@
  * 
  * Author: Pi Ko (pi.ko@nyu.edu)
  * Date: 04 February 2026
- * Version: v1.0
+ * Version: v1.1
  * 
  * Description:
  *   Starter CHAI3D application with Haply Inverse3 haptic device support.
@@ -36,6 +36,7 @@
  *   .\bin\Release\aimlab-haptics.exe
  * 
  * Changelog:
+ *   v1.1 - 04 February 2026 - Fixed class name from cSphere to cShapeSphere
  *   v1.0 - 04 February 2026 - Initial implementation
  * 
  * Based on:
@@ -66,7 +67,7 @@ using namespace std;
 cWorld* world;                              // 3D world container
 cCamera* camera;                            // Virtual camera
 cDirectionalLight* light;                   // Directional light source
-cSphere* sphere;                            // Interactive haptic sphere
+cShapeSphere* sphere;                       // Interactive haptic sphere
 
 // Haptic Device and Tool
 cHapticDeviceHandler* handler;              // Haptic device manager
@@ -328,7 +329,7 @@ int main(int argc, char* argv[]) {
     // SCENE OBJECT SETUP - Interactive Sphere
     //-----------------------------------------------------------------------
     cout << "Creating scene objects..." << endl;
-    sphere = new cSphere(0.03);          // 30mm radius sphere
+    sphere = new cShapeSphere(0.03);     // 30mm radius sphere
     world->addChild(sphere);
     sphere->setLocalPos(0.0, 0.0, 0.0);  // Center of workspace
 
