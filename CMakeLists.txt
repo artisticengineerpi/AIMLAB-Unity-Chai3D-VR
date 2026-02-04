@@ -3,7 +3,7 @@
 #
 # Author: Pi Ko (pi.ko@nyu.edu)
 # Date: 04 February 2026
-# Version: v1.5
+# Version: v1.6
 # 
 # Description:
 #   Top-level CMake configuration for CHAI3D + Haply Inverse3 haptic 
@@ -23,6 +23,7 @@
 #   cmake --build . --config Release
 #
 # Changelog:
+#   v1.6 - 04 February 2026 - Force /MT flags directly (CMAKE_MSVC_RUNTIME_LIBRARY didn't work)
 #   v1.5 - 04 February 2026 - Fixed runtime library mismatch (use /MT to match CHAI3D)
 #   v1.4 - 04 February 2026 - Build FreeGLUT from source using add_subdirectory()
 #   v1.3 - 04 February 2026 - Added Windows OpenGL libraries (opengl32, glu32)
@@ -43,7 +44,17 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # Match CHAI3D's runtime library setting (static /MT)
 # CHAI3D uses MT_StaticRelease, so we must use /MT to avoid linker errors
 if(MSVC)
-    set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+    # Force static runtime library for all configurations
+    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MT")
+    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MTd")
+    set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} /MT")
+    set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} /MTd")
+    
+    # Remove any /MD or /MDd flags that might be set by default
+    string(REPLACE "/MD" "/MT" CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE}")
+    string(REPLACE "/MDd" "/MTd" CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG}")
+    string(REPLACE "/MD" "/MT" CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE}")
+    string(REPLACE "/MDd" "/MTd" CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG}")
 endif()
 
 # ─────────────────────────────────────────────────────────────────────────
