@@ -3,7 +3,7 @@
 #
 # Author: Pi Ko (pi.ko@nyu.edu)
 # Date: 04 February 2026
-# Version: v1.4
+# Version: v1.5
 # 
 # Description:
 #   Top-level CMake configuration for CHAI3D + Haply Inverse3 haptic 
@@ -23,6 +23,7 @@
 #   cmake --build . --config Release
 #
 # Changelog:
+#   v1.5 - 04 February 2026 - Fixed runtime library mismatch (use /MT to match CHAI3D)
 #   v1.4 - 04 February 2026 - Build FreeGLUT from source using add_subdirectory()
 #   v1.3 - 04 February 2026 - Added Windows OpenGL libraries (opengl32, glu32)
 #   v1.2 - 04 February 2026 - Fixed FreeGLUT path (extras/freeglut not external/freeglut)
@@ -38,6 +39,12 @@ project(AIMLAB-Haptics VERSION 1.0 LANGUAGES CXX)
 # CHAI3D's Eigen uses std::binder1st/binder2nd which were removed in C++17
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+# Match CHAI3D's runtime library setting (static /MT)
+# CHAI3D uses MT_StaticRelease, so we must use /MT to avoid linker errors
+if(MSVC)
+    set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+endif()
 
 # ─────────────────────────────────────────────────────────────────────────
 # CHAI3D Configuration
