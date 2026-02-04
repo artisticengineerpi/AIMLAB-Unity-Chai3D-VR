@@ -3,7 +3,7 @@
  * 
  * Author: Pi Ko (pi.ko@nyu.edu)
  * Date: 04 February 2026
- * Version: v1.4
+ * Version: v1.5
  * 
  * Description:
  *   Starter CHAI3D application with Haply Inverse3 haptic device support.
@@ -39,6 +39,7 @@
  *   .\bin\Release\aimlab-haptics.exe
  * 
  * Changelog:
+ *   v1.5 - 04 February 2026 - Larger visible cursor (15mm), wider workspace (1.0m) for Pantograph
  *   v1.4 - 04 February 2026 - Graceful no-device handling; runs graphics without haptics
  *   v1.3 - 04 February 2026 - Changed to GL/glut.h, static runtime linkage
  *   v1.2 - 04 February 2026 - Fixed specular property
@@ -338,10 +339,14 @@ int main(int argc, char* argv[]) {
         tool = new cToolCursor(world);
         world->addChild(tool);
         tool->setHapticDevice(hapticDevice);
-        tool->setRadius(0.005);
-        tool->setWorkspaceRadius(0.15);
+        tool->setRadius(0.015);              // Larger cursor (15mm) so it's visible
+        tool->setWorkspaceRadius(1.0);       // Wider workspace mapping for Pantograph
         tool->enableDynamicObjects(true);
         tool->start();
+
+        // Make cursor visible with bright colors
+        tool->m_hapticPoint->m_sphereProxy->m_material->setWhite();
+        tool->m_hapticPoint->m_sphereGoal->m_material->setYellowGold();
 
         cout << "[init] Starting haptic rendering thread..." << endl;
         hapticThread = new cThread();
