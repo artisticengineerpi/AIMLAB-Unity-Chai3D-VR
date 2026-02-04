@@ -10,7 +10,7 @@ This project integrates CHAI3D haptic framework with Haply Inverse3 device and U
 
 **Author:** Pi Ko (pi.ko@nyu.edu)  
 **Date:** 04 February 2026  
-**Version:** v2.0
+**Version:** v2.1
 
 ---
 
@@ -330,6 +330,34 @@ Could not open serial port: IO Exception: error code 5
 
 ---
 
+### Issue 10: Runtime Library Mismatch (LNK2038)
+
+**Problem:**
+```
+error LNK2038: mismatch detected for 'RuntimeLibrary': 
+  value 'MT_StaticRelease' doesn't match value 'MD_DynamicRelease'
+```
+
+**Cause:** CHAI3D was built with static runtime (`/MT`), but your project is using dynamic runtime (`/MD`). They must match!
+
+**Solution:** Already fixed in CMakeLists.txt. The project now uses static runtime to match CHAI3D:
+```cmake
+if(MSVC)
+    set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+endif()
+```
+
+**After adding this fix, you MUST do a clean rebuild:**
+```powershell
+Remove-Item -Recurse -Force build
+mkdir build
+cd build
+cmake .. -G "Visual Studio 17 2022" -A x64 "-DCMAKE_POLICY_VERSION_MINIMUM=3.5"
+cmake --build . --config Release
+```
+
+---
+
 ### Quick Troubleshooting Reference
 
 | Error | Quick Fix |
@@ -340,6 +368,7 @@ Could not open serial port: IO Exception: error code 5
 | Eigen binder errors | Use C++14 (already set in CMakeLists.txt) |
 | GL/freeglut.h not found | Clean rebuild - FreeGLUT builds automatically |
 | freeglut.lib not found | Clean rebuild - FreeGLUT builds from source |
+| Runtime library mismatch (LNK2038) | Clean rebuild required - CMakeLists.txt now uses /MT |
 | Serial port error 5 | Close Haply Hub before running |
 
 **For detailed troubleshooting:** See [docs/REAL_WORLD_SETUP_GUIDE.md](docs/REAL_WORLD_SETUP_GUIDE.md)
@@ -365,6 +394,11 @@ Could not open serial port: IO Exception: error code 5
 ---
 
 ## Changelog
+
+### v2.1 - 04 February 2026
+- Added Issue 10: Runtime library mismatch (LNK2038) with solution
+- CMakeLists.txt now uses static /MT runtime to match CHAI3D
+- Updated quick reference table with all 10 common issues
 
 ### v2.0 - 04 February 2026
 - Added comprehensive "Common Issues & Solutions" section to README
