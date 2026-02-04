@@ -3,7 +3,7 @@
 #
 # Author: Pi Ko (pi.ko@nyu.edu)
 # Date: 04 February 2026
-# Version: v1.6
+# Version: v1.7
 # 
 # Description:
 #   Top-level CMake configuration for CHAI3D + Haply Inverse3 haptic 
@@ -23,6 +23,7 @@
 #   cmake --build . --config Release
 #
 # Changelog:
+#   v1.7 - 04 February 2026 - Changed CMake minimum to 3.15 for CMAKE_MSVC_RUNTIME_LIBRARY support
 #   v1.6 - 04 February 2026 - Force /MT flags directly (CMAKE_MSVC_RUNTIME_LIBRARY didn't work)
 #   v1.5 - 04 February 2026 - Fixed runtime library mismatch (use /MT to match CHAI3D)
 #   v1.4 - 04 February 2026 - Build FreeGLUT from source using add_subdirectory()
@@ -33,7 +34,7 @@
 #
 ##############################################################################
 
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.15)
 project(AIMLAB-Haptics VERSION 1.0 LANGUAGES CXX)
 
 # Use C++14 to maintain compatibility with CHAI3D's bundled Eigen library
@@ -41,21 +42,9 @@ project(AIMLAB-Haptics VERSION 1.0 LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# Match CHAI3D's runtime library setting (static /MT)
+# Match CHAI3D's static runtime linkage (/MT for Release, /MTd for Debug)
 # CHAI3D uses MT_StaticRelease, so we must use /MT to avoid linker errors
-if(MSVC)
-    # Force static runtime library for all configurations
-    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MT")
-    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MTd")
-    set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} /MT")
-    set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} /MTd")
-    
-    # Remove any /MD or /MDd flags that might be set by default
-    string(REPLACE "/MD" "/MT" CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE}")
-    string(REPLACE "/MDd" "/MTd" CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG}")
-    string(REPLACE "/MD" "/MT" CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE}")
-    string(REPLACE "/MDd" "/MTd" CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG}")
-endif()
+set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 
 # ─────────────────────────────────────────────────────────────────────────
 # CHAI3D Configuration
