@@ -10,7 +10,7 @@ This project integrates CHAI3D haptic framework with Haply Inverse3 device and U
 
 **Author:** Pi Ko (pi.ko@nyu.edu)  
 **Date:** 04 February 2026  
-**Version:** v2.4
+**Version:** v2.5
 
 ---
 
@@ -396,6 +396,41 @@ Could not open serial port: IO Exception: error code 5
 
 ---
 
+### Issue 11: Device Detected but Position Always Zero (Protocol Mismatch)
+
+**Problem:**
+```
+Device found: Haply Pantograph
+[debug] Tool pos: 0, 0, 0  (never changes even when moving device)
+```
+
+**Cause:** The GitHub CHAI3D fork (`HaplyHaptics/chai3d`) only supports the **old Haply Pantograph (2-DOF)**, not the **Inverse3**. It opens the serial port but speaks the wrong protocol.
+
+**Solutions:**
+
+**Option A: Use Official Haply CHAI3D Releases (Recommended for Inverse3)**
+1. Download pre-built CHAI3D with Inverse3 support:
+   - Go to: https://develop.haply.co/releases/chai3d/3.3.5
+   - Download: `Chai3D.3.3.5.zip` (Windows Release)
+   - Extract and run demos to verify Inverse3 works
+
+2. Clone source code with proper Inverse3 support:
+   ```powershell
+   cd C:\Users\other\Documents\GitHub
+   git clone https://gitlab.com/Haply/public/chai3d-demos.git
+   ```
+   Study these demos for proper Inverse3 integration using HardwareAPI.
+
+**Option B: Continue with Pantograph Support**
+- If you have the old 2-DOF Pantograph, the current setup works
+- GitHub fork is designed for that device
+
+**Key Difference:**
+- **Old Pantograph:** Uses `Haply-API-cpp` with serial protocol
+- **Inverse3:** Uses `HardwareAPI` or `Inverse SDK` (service-based)
+
+---
+
 ### Issue 10: Runtime Library Mismatch (LNK2038)
 
 **Problem:**
@@ -438,6 +473,7 @@ cmake --build . --config Release
 | freeglut.lib not found | Clean rebuild - FreeGLUT builds from source |
 | Runtime library mismatch (LNK2038) | Requires CMake 3.15+ and clean rebuild - uses /MT to match CHAI3D |
 | Serial port error 5 | Close Haply Hub before running |
+| Position always 0,0,0 (Inverse3) | GitHub fork only supports old Pantograph - use official releases from develop.haply.co |
 
 **For detailed troubleshooting:** See [docs/REAL_WORLD_SETUP_GUIDE.md](docs/REAL_WORLD_SETUP_GUIDE.md)
 
@@ -454,14 +490,33 @@ cmake --build . --config Release
 
 ## Support & Resources
 
+### Official Haply Resources
+
+- **Haply Developer Hub:** https://develop.haply.co/releases
+- **Official CHAI3D Releases (Inverse3 Support):** https://develop.haply.co/releases/chai3d
+  - Latest: CHAI3D v3.3.5 (June 2025)
+  - Pre-built demos with proper Inverse3 protocol
+- **CHAI3D Demos Source (GitLab):** https://gitlab.com/Haply/public/chai3d-demos
 - **Haply Documentation:** https://docs.haply.co/
-- **CHAI3D Homepage:** https://www.chai3d.org/
-- **Haply CHAI3D Fork:** https://github.com/HaplyHaptics/chai3d
 - **Haply Forum:** https://forum.haply.co/
+
+### CHAI3D Resources
+
+- **CHAI3D Homepage:** https://www.chai3d.org/
+- **Haply CHAI3D Fork (GitHub):** https://github.com/HaplyHaptics/chai3d
+  - ⚠️ **Note:** This fork supports old Haply Pantograph (2-DOF), NOT Inverse3
+  - For Inverse3 support, use official releases from develop.haply.co
 
 ---
 
 ## Changelog
+
+### v2.5 - 04 February 2026
+- Added Issue 11: Protocol mismatch for Inverse3 with solution
+- Documented official Haply releases at develop.haply.co/releases/chai3d
+- Clarified GitHub fork only supports old Pantograph, not Inverse3
+- Added links to official CHAI3D v3.3.5 and GitLab demos source
+- Updated Support & Resources with comprehensive Haply links
 
 ### v2.4 - 04 February 2026
 - Added run.ps1 script with automatic Haply process cleanup
