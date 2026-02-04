@@ -10,7 +10,7 @@ This project integrates CHAI3D haptic framework with Haply Inverse3 device and U
 
 **Author:** Pi Ko (pi.ko@nyu.edu)  
 **Date:** 04 February 2026  
-**Version:** v2.1
+**Version:** v2.2
 
 ---
 
@@ -42,10 +42,11 @@ AIMLAB-Unity-Chai3D-VR/
 ### Prerequisites
 
 1. **Visual Studio 2022** with "Desktop development with C++" workload
-2. **CMake** >= 3.10 (bundled with VS2022 or standalone)
+2. **CMake** >= 3.15 (required for runtime library control)
    ```powershell
    winget install Kitware.CMake
    ```
+   **Note:** CMake 3.15+ is required for `CMAKE_MSVC_RUNTIME_LIBRARY` to properly set `/MT` flags.
 3. **Git** for Windows
 4. **Haply Hub** and Inverse Service >= 3.1.0
 5. **Haply Inverse3** device (connected, powered, calibrated)
@@ -340,14 +341,16 @@ error LNK2038: mismatch detected for 'RuntimeLibrary':
 
 **Cause:** CHAI3D was built with static runtime (`/MT`), but your project is using dynamic runtime (`/MD`). They must match!
 
-**Solution:** Already fixed in CMakeLists.txt. The project now uses static runtime to match CHAI3D:
+**Solution:** Already fixed in CMakeLists.txt. The project uses:
+- **CMake 3.15 minimum** (required for CMAKE_MSVC_RUNTIME_LIBRARY support)
+- **Static runtime setting** to match CHAI3D:
 ```cmake
-if(MSVC)
-    set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
-endif()
+set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 ```
 
-**After adding this fix, you MUST do a clean rebuild:**
+This sets `/MT` for Release and `/MTd` for Debug.
+
+**Critical: You MUST do a clean rebuild after pulling this fix:**
 ```powershell
 Remove-Item -Recurse -Force build
 mkdir build
@@ -368,7 +371,7 @@ cmake --build . --config Release
 | Eigen binder errors | Use C++14 (already set in CMakeLists.txt) |
 | GL/freeglut.h not found | Clean rebuild - FreeGLUT builds automatically |
 | freeglut.lib not found | Clean rebuild - FreeGLUT builds from source |
-| Runtime library mismatch (LNK2038) | Clean rebuild required - CMakeLists.txt now uses /MT |
+| Runtime library mismatch (LNK2038) | Requires CMake 3.15+ and clean rebuild - uses /MT to match CHAI3D |
 | Serial port error 5 | Close Haply Hub before running |
 
 **For detailed troubleshooting:** See [docs/REAL_WORLD_SETUP_GUIDE.md](docs/REAL_WORLD_SETUP_GUIDE.md)
@@ -394,6 +397,12 @@ cmake --build . --config Release
 ---
 
 ## Changelog
+
+### v2.2 - 04 February 2026
+- Updated CMake minimum version requirement to 3.15 (for CMAKE_MSVC_RUNTIME_LIBRARY)
+- Clarified runtime library fix requires CMake 3.15+
+- Application now builds successfully with all fixes applied
+- Project is fully tested and functional
 
 ### v2.1 - 04 February 2026
 - Added Issue 10: Runtime library mismatch (LNK2038) with solution
