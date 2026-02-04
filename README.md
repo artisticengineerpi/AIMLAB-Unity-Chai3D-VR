@@ -10,7 +10,7 @@ This project integrates CHAI3D haptic framework with Haply Inverse3 device and U
 
 **Author:** Pi Ko (pi.ko@nyu.edu)  
 **Date:** 04 February 2026  
-**Version:** v2.2
+**Version:** v2.3
 
 ---
 
@@ -170,8 +170,9 @@ This comprehensive documentation suite covers:
 - ✅ Real-time haptic rendering (1 kHz+)
 - ✅ GLUT-based 3D graphics
 - ✅ Starter application with interactive sphere
+- ✅ **Graceful device fallback** - runs in visual-only mode without device
 - ✅ CMake build system for cross-platform development
-- ✅ Comprehensive documentation
+- ✅ Comprehensive documentation with 10+ common issues solved
 
 ---
 
@@ -397,6 +398,12 @@ cmake --build . --config Release
 ---
 
 ## Changelog
+
+### v2.3 - 04 February 2026
+- Added graceful device error handling - runs in visual-only mode without device
+- Application provides helpful diagnostics for device connection failures
+- Updated features list with graceful fallback capability
+- Main.cpp v1.4 with three-tier device detection
 
 ### v2.2 - 04 February 2026
 - Updated CMake minimum version requirement to 3.15 (for CMAKE_MSVC_RUNTIME_LIBRARY)
