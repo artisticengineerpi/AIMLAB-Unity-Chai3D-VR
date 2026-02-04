@@ -10,7 +10,7 @@ This project integrates CHAI3D haptic framework with Haply Inverse3 device and U
 
 **Author:** Pi Ko (pi.ko@nyu.edu)  
 **Date:** 04 February 2026  
-**Version:** v1.4
+**Version:** v1.5
 
 ---
 
@@ -121,6 +121,10 @@ AIMLAB-Unity-Chai3D-VR/
    cmake --build . --config Release
    ```
 
+   **📝 Note: C++14 Standard**
+   
+   This project uses C++14 (not C++17) to maintain compatibility with CHAI3D's bundled Eigen library. CHAI3D's Eigen uses `std::binder1st` and `std::binder2nd`, which were removed in C++17. The CMakeLists.txt is already configured for C++14, so no additional flags are needed.
+
 4. **Run the application:**
    ```powershell
    .\bin\Release\aimlab-haptics.exe
@@ -195,6 +199,11 @@ This comprehensive guide covers:
 ---
 
 ## Changelog
+
+### v1.5 - 04 February 2026
+- Changed C++ standard from C++17 to C++14 for CHAI3D Eigen compatibility
+- Added note about C++14 requirement (std::binder1st/binder2nd removed in C++17)
+- Updated CMakeLists.txt with compatibility comments
 
 ### v1.4 - 04 February 2026
 - Fixed PowerShell quoting for CMake flag to prevent argument splitting at dot

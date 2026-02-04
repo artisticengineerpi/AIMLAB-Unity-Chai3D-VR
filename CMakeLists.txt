@@ -3,7 +3,7 @@
 #
 # Author: Pi Ko (pi.ko@nyu.edu)
 # Date: 04 February 2026
-# Version: v1.0
+# Version: v1.1
 # 
 # Description:
 #   Top-level CMake configuration for CHAI3D + Haply Inverse3 haptic 
@@ -23,6 +23,7 @@
 #   cmake --build . --config Release
 #
 # Changelog:
+#   v1.1 - 04 February 2026 - Changed C++ standard to C++14 for CHAI3D Eigen compatibility
 #   v1.0 - 04 February 2026 - Initial project structure setup
 #
 ##############################################################################
@@ -30,7 +31,9 @@
 cmake_minimum_required(VERSION 3.10)
 project(AIMLAB-Haptics VERSION 1.0 LANGUAGES CXX)
 
-set(CMAKE_CXX_STANDARD 17)
+# Use C++14 to maintain compatibility with CHAI3D's bundled Eigen library
+# CHAI3D's Eigen uses std::binder1st/binder2nd which were removed in C++17
+set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # ─────────────────────────────────────────────────────────────────────────
