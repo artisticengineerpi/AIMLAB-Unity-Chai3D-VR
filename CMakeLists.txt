@@ -3,7 +3,7 @@
 #
 # Author: Pi Ko (pi.ko@nyu.edu)
 # Date: 04 February 2026
-# Version: v1.1
+# Version: v1.2
 # 
 # Description:
 #   Top-level CMake configuration for CHAI3D + Haply Inverse3 haptic 
@@ -23,6 +23,7 @@
 #   cmake --build . --config Release
 #
 # Changelog:
+#   v1.2 - 04 February 2026 - Fixed FreeGLUT path (extras/freeglut not external/freeglut)
 #   v1.1 - 04 February 2026 - Changed C++ standard to C++14 for CHAI3D Eigen compatibility
 #   v1.0 - 04 February 2026 - Initial project structure setup
 #
@@ -57,8 +58,8 @@ include_directories(${CHAI3D_INCLUDE_DIRS})
 # FreeGLUT Configuration (bundled with CHAI3D on Windows)
 # ─────────────────────────────────────────────────────────────────────────
 if(WIN32)
-    # CHAI3D bundles freeglut in its external/ directory
-    set(FREEGLUT_DIR "${CMAKE_CURRENT_SOURCE_DIR}/external/chai3d/external/freeglut")
+    # CHAI3D bundles freeglut in its extras/ directory (not external/)
+    set(FREEGLUT_DIR "${CMAKE_CURRENT_SOURCE_DIR}/external/chai3d/extras/freeglut")
     include_directories("${FREEGLUT_DIR}/include")
     if(CMAKE_SIZEOF_VOID_P EQUAL 8)
         link_directories("${FREEGLUT_DIR}/lib/x64")

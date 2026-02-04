@@ -10,7 +10,7 @@ This project integrates CHAI3D haptic framework with Haply Inverse3 device and U
 
 **Author:** Pi Ko (pi.ko@nyu.edu)  
 **Date:** 04 February 2026  
-**Version:** v1.5
+**Version:** v1.6
 
 ---
 
@@ -134,11 +134,25 @@ AIMLAB-Unity-Chai3D-VR/
 
 ## Documentation
 
-Complete setup instructions, troubleshooting guide, and API references are available in:
+### Quick Start Guides
+
+**🚀 [docs/REAL_WORLD_SETUP_GUIDE.md](docs/REAL_WORLD_SETUP_GUIDE.md)** ⭐ **START HERE!**
+- **Practical guide based on actual implementation experience**
+- Real issues encountered and their solutions
+- Step-by-step with all the gotchas documented
+- Tested on Windows 11 Build 26100
+- Perfect for LLM agents and developers
 
 **📖 [docs/SETUP_INSTRUCTIONS.md](docs/SETUP_INSTRUCTIONS.md)**
+- Complete theoretical setup guide
+- Architecture overview and design decisions
+- All 31 demos explained
+- Extension modules (GEL, BULLET, ODE)
+- Reference documentation
 
-This comprehensive guide covers:
+### Additional Resources
+
+This comprehensive documentation suite covers:
 - Complete installation and configuration
 - CHAI3D library building and modules
 - Haply device setup and calibration
@@ -199,6 +213,11 @@ This comprehensive guide covers:
 ---
 
 ## Changelog
+
+### v1.6 - 04 February 2026
+- Fixed FreeGLUT path in CMakeLists.txt (extras/freeglut not external/freeglut)
+- Added REAL_WORLD_SETUP_GUIDE.md with actual implementation experience
+- Documented all real-world issues and solutions encountered during setup
 
 ### v1.5 - 04 February 2026
 - Changed C++ standard from C++17 to C++14 for CHAI3D Eigen compatibility
