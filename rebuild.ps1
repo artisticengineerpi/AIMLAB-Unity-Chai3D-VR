@@ -103,19 +103,32 @@ if (Test-Path $ExePath) {
 # Return to project root
 Set-Location $ProjectRoot
 
+# Return to project root
+Set-Location $ProjectRoot
+
 # Summary
 Write-Host ""
 Write-Host "========================================" -ForegroundColor Cyan
 Write-Host "Rebuild Complete!" -ForegroundColor Cyan
 Write-Host "========================================" -ForegroundColor Cyan
 Write-Host ""
-Write-Host "Run the application:" -ForegroundColor Green
-Write-Host "  .\build\Release\aimlab-haptics.exe" -ForegroundColor White
-Write-Host ""
-Write-Host "Or from build directory:" -ForegroundColor Green
-Write-Host "  cd build" -ForegroundColor Gray
-Write-Host "  .\Release\aimlab-haptics.exe" -ForegroundColor Gray
-Write-Host ""
-Write-Host "The app runs in VISUAL-ONLY mode if no device detected." -ForegroundColor Yellow
-Write-Host "To enable haptics: Close Haply Hub, connect Inverse3, relaunch." -ForegroundColor Yellow
-Write-Host ""
+
+# Ask if user wants to run the app
+$response = Read-Host "Do you want to run the application now? (Y/n)"
+
+if ($response -eq '' -or $response -eq 'y' -or $response -eq 'Y') {
+    Write-Host ""
+    Write-Host "[INFO] Launching application with process cleanup..." -ForegroundColor Cyan
+    & "$ProjectRoot\run.ps1"
+} else {
+    Write-Host ""
+    Write-Host "Run the application later with:" -ForegroundColor Green
+    Write-Host "  .\run.ps1" -ForegroundColor White
+    Write-Host ""
+    Write-Host "Or manually:" -ForegroundColor Green
+    Write-Host "  .\build\Release\aimlab-haptics.exe" -ForegroundColor Gray
+    Write-Host ""
+    Write-Host "The app runs in VISUAL-ONLY mode if no device detected." -ForegroundColor Yellow
+    Write-Host "To enable haptics: Use .\run.ps1 (kills Haply Hub automatically)" -ForegroundColor Yellow
+    Write-Host ""
+}
