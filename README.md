@@ -10,7 +10,7 @@ This project integrates CHAI3D haptic framework with Haply Inverse3 device and U
 
 **Author:** Pi Ko (pi.ko@nyu.edu)  
 **Date:** 04 February 2026  
-**Version:** v2.6
+**Version:** v2.7
 
 ---
 
@@ -545,6 +545,15 @@ cmake --build . --config Release
 ---
 
 ## Changelog
+
+### v2.7 - 04 February 2026
+- **Major Update:** Enhanced `src/main.cpp` to v2.0 with comprehensive device compatibility documentation
+- Added extensive inline comments explaining Inverse3 vs Pantograph protocol differences
+- Automatic Inverse3 detection with helpful guidance to use official CHAI3D demos
+- Added runtime warning if position stuck at (0,0,0) due to protocol mismatch
+- Enhanced console banners with device support matrix and next-steps guidance
+- Updated all error messages with actionable troubleshooting steps
+- Clarified this build supports Pantograph, official demos required for Inverse3
 
 ### v2.6 - 04 February 2026
 - Added official CHAI3D v3.3.5 download instructions to Setup Steps

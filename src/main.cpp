@@ -3,20 +3,41 @@
  * 
  * Author: Pi Ko (pi.ko@nyu.edu)
  * Date: 04 February 2026
- * Version: v1.6
+ * Version: v2.0
  * 
  * Description:
- *   Starter CHAI3D application with Haply Inverse3 haptic device support.
+ *   Starter CHAI3D application with Haply haptic device support.
  *   This application demonstrates basic haptic rendering with a simple
- *   3D scene containing an interactive sphere. The Inverse3 device provides
- *   force feedback when the cursor interacts with the sphere.
+ *   3D scene containing an interactive sphere.
+ * 
+ *   IMPORTANT - DEVICE COMPATIBILITY:
+ *   ===================================
+ *   This build uses the GitHub CHAI3D fork (HaplyHaptics/chai3d) which
+ *   ONLY supports the old Haply Pantograph (2-DOF) device via direct
+ *   serial protocol (Haply-API-cpp).
+ * 
+ *   For INVERSE3 support, you need:
+ *     - Official Haply CHAI3D v3.3.5 from https://develop.haply.co/releases/chai3d
+ *     - OR GitLab source: https://gitlab.com/Haply/public/chai3d-demos
+ *     - Uses Inverse SDK (WebSocket, not direct serial)
+ *     - Requires Haply Inverse Service >= 3.1.0 running
+ * 
+ *   Device Support Matrix:
+ *   ----------------------
+ *   | Device          | This Build | Official CHAI3D | Protocol           |
+ *   |-----------------|------------|-----------------|-------------------|
+ *   | Pantograph 2DOF | ✅ YES     | ✅ YES          | Serial (Haply-API)|
+ *   | Inverse3 3DOF   | ❌ NO*     | ✅ YES          | Inverse SDK (WS)  |
+ * 
+ *   * Inverse3 will be detected but position will always read 0,0,0 due to
+ *     protocol mismatch. See docs/INVERSE3_PROTOCOL_NOTES.md for details.
  * 
  *   The application gracefully handles missing haptic devices — it will
  *   still render the 3D scene for visual preview even if no device is
- *   detected or if the Haply Hub is not running.
+ *   detected or cannot be opened.
  * 
  * Features:
- *   - Auto-detection of Haply Inverse3 device
+ *   - Auto-detection of Haply devices
  *   - Graceful fallback when no device is connected
  *   - Basic 3D scene with camera, lighting, and haptic object
  *   - Real-time haptic rendering thread (1 kHz+)
@@ -27,18 +48,23 @@
  *   - ESC or 'q': Quit application
  *   - 'f': Toggle fullscreen mode
  * 
- * Prerequisites:
- *   - CHAI3D library built with ENABLE_HAPLY_DEVICES=ON
- *   - Haply Hub running with Inverse Service >= 3.1.0 (for haptics)
- *   - Inverse3 device connected, powered, and calibrated (for haptics)
+ * Prerequisites (Current Build):
+ *   - CHAI3D library from GitHub fork (included as submodule)
+ *   - For Pantograph: Device connected and calibrated
+ *   - For Inverse3: Use official CHAI3D demos instead (see docs/)
  * 
  * Build Instructions:
- *   mkdir build && cd build
- *   cmake .. -G "Visual Studio 17 2022" -A x64
- *   cmake --build . --config Release
- *   .\bin\Release\aimlab-haptics.exe
+ *   .\setup-chai3d.ps1    # One-time setup
+ *   .\rebuild.ps1         # Full rebuild
+ *   .\run.ps1             # Run with auto-cleanup
+ * 
+ * Testing with Inverse3:
+ *   Use official pre-built demos instead:
+ *   .\run-official-demos.ps1
  * 
  * Changelog:
+ *   v2.0 - 04 February 2026 - Major documentation update: clarified device compatibility,
+ *                              protocol limitations, added Inverse3 guidance, reorganized docs
  *   v1.6 - 04 February 2026 - Added position debugging and setShowEnabled(true) for cursor
  *   v1.5 - 04 February 2026 - Larger visible cursor (15mm), wider workspace (1.0m) for Pantograph
  *   v1.4 - 04 February 2026 - Graceful no-device handling; runs graphics without haptics
@@ -49,7 +75,12 @@
  * 
  * Based on:
  *   CHAI3D framework (www.chai3d.org)
- *   Haply CHAI3D fork with Inverse3 support
+ *   GitHub fork: HaplyHaptics/chai3d (Pantograph protocol only)
+ * 
+ * See Also:
+ *   docs/INVERSE3_PROTOCOL_NOTES.md  - Detailed protocol explanation
+ *   docs/USING_OFFICIAL_CHAI3D.md    - How to use official Inverse3 demos
+ *   docs/REAL_WORLD_SETUP_GUIDE.md   - Complete setup troubleshooting
  * 
  ****************************************************************************/
 
@@ -130,12 +161,26 @@ void updateGraphics() {
     // Debug: print tool position to console every ~60 frames
     if (hapticDeviceConnected) {
         static int frameCount = 0;
+        static bool warnedZeroPosition = false;
         if (++frameCount % 60 == 0) {
             cVector3d pos = tool->getDeviceGlobalPos();
             cout << "[debug] Tool pos: "
                  << pos.x() << ", "
                  << pos.y() << ", "
                  << pos.z() << endl;
+
+            // Check for persistent zero position (Inverse3 protocol mismatch symptom)
+            if (!warnedZeroPosition && frameCount > 300) {  // After 5 seconds @ 60fps
+                if (pos.length() < 0.001) {  // Essentially zero
+                    cout << endl;
+                    cout << "  ⚠️  Position is stuck at (0,0,0)" << endl;
+                    cout << "  If you have Inverse3, this is a protocol mismatch." << endl;
+                    cout << "  Use: .\\run-official-demos.ps1" << endl;
+                    cout << "  See: docs/INVERSE3_PROTOCOL_NOTES.md" << endl;
+                    cout << endl;
+                    warnedZeroPosition = true;
+                }
+            }
         }
     }
 
@@ -201,6 +246,11 @@ int main(int argc, char* argv[]) {
     cout << "  AIMLAB Haptics Starter Application"    << endl;
     cout << "  Author: Pi Ko (pi.ko@nyu.edu)"        << endl;
     cout << "  Date:   04 February 2026"              << endl;
+    cout << "  Version: v2.0"                         << endl;
+    cout << "========================================" << endl;
+    cout << "  Device Support:"                        << endl;
+    cout << "    ✅ Pantograph (2-DOF)"                << endl;
+    cout << "    ❌ Inverse3 (use official demos)"     << endl;
     cout << "========================================" << endl;
     cout << endl;
 
@@ -271,6 +321,32 @@ int main(int argc, char* argv[]) {
     //-----------------------------------------------------------------------
     // HAPTIC DEVICE (with graceful fallback)
     //-----------------------------------------------------------------------
+    // NOTE: This build uses the GitHub CHAI3D fork which supports:
+    //   ✅ Haply Pantograph (2-DOF) - works correctly
+    //   ❌ Haply Inverse3 (3-DOF) - protocol mismatch, position always 0,0,0
+    //
+    // For proper Inverse3 support, see:
+    //   - docs/INVERSE3_PROTOCOL_NOTES.md (detailed explanation)
+    //   - docs/USING_OFFICIAL_CHAI3D.md (how to use official demos)
+    //   - Run: .\run-official-demos.ps1 (34 pre-built Inverse3-compatible demos)
+    //
+    // What needs to change for Inverse3:
+    //   1. Use official Haply CHAI3D library (not GitHub fork)
+    //   2. Official library uses Inverse SDK (WebSocket protocol)
+    //   3. Connects to Inverse Service at ws://localhost:10001
+    //   4. Haply Hub MUST be running (opposite of current requirement)
+    //   5. Device class: Haply::HardwareAPI::Devices::Inverse3
+    //   6. Methods: GetEndEffectorPosition(), SendEndEffectorForce()
+    //
+    // Example Inverse3 initialization (with official CHAI3D):
+    //   handler->getDevice(hapticDevice, 0);  // Same API surface
+    //   hapticDevice->open();                 // Internally uses Inverse SDK
+    //   // Position and force work correctly through WebSocket
+    //
+    // For now, this code attempts generic device detection and will
+    // gracefully fall back to visual-only mode if device fails.
+    //-----------------------------------------------------------------------
+
     cout << "[init] Detecting haptic devices..." << endl;
     handler = new cHapticDeviceHandler();
     handler->getDevice(hapticDevice, 0);
@@ -287,14 +363,19 @@ int main(int argc, char* argv[]) {
         cout << "  You can view the 3D scene but haptic feedback" << endl;
         cout << "  is disabled." << endl;
         cout << endl;
-        cout << "  To enable haptics, make sure:" << endl;
-        cout << "    1. Haply Hub is installed and running" << endl;
-        cout << "    2. Inverse Service >= 3.1.0 is active" << endl;
-        cout << "    3. Inverse3 is connected via USB-C" << endl;
-        cout << "    4. 24V power supply is plugged in" << endl;
-        cout << "    5. Device LED is solid white (calibrated)" << endl;
-        cout << "    6. Close Haply Hub before launching this app" << endl;
-        cout << "       (Hub may hold exclusive serial port access)" << endl;
+        cout << "  Device Support:" << endl;
+        cout << "    ✅ Haply Pantograph (2-DOF) - fully supported" << endl;
+        cout << "    ❌ Haply Inverse3 (3-DOF) - use official demos" << endl;
+        cout << endl;
+        cout << "  For Pantograph:" << endl;
+        cout << "    1. Connect device via USB" << endl;
+        cout << "    2. Close Haply Hub (port conflict)" << endl;
+        cout << "    3. Run: .\\run.ps1" << endl;
+        cout << endl;
+        cout << "  For Inverse3:" << endl;
+        cout << "    1. Download: https://develop.haply.co/releases/chai3d" << endl;
+        cout << "    2. Run: .\\run-official-demos.ps1" << endl;
+        cout << "    3. See: docs/USING_OFFICIAL_CHAI3D.md" << endl;
         cout << "  =============================================" << endl;
         cout << endl;
 
@@ -308,6 +389,32 @@ int main(int argc, char* argv[]) {
         cout << "[init] Device found: " << info.m_modelName << endl;
         cout << "[init] Manufacturer: " << info.m_manufacturerName << endl;
 
+        // Check if detected device is Inverse3
+        if (info.m_modelName.find("Inverse3") != std::string::npos) {
+            cout << endl;
+            cout << "  =============================================" << endl;
+            cout << "  IMPORTANT: Inverse3 Detected!" << endl;
+            cout << "  =============================================" << endl;
+            cout << "  This build uses the GitHub CHAI3D fork which" << endl;
+            cout << "  does NOT support Inverse3 protocol." << endl;
+            cout << endl;
+            cout << "  Symptoms you may experience:" << endl;
+            cout << "    - Position always reads (0, 0, 0)" << endl;
+            cout << "    - Device appears connected but doesn't track" << endl;
+            cout << "    - Force feedback may not work" << endl;
+            cout << endl;
+            cout << "  Solution - Use Official Demos:" << endl;
+            cout << "    .\\run-official-demos.ps1" << endl;
+            cout << endl;
+            cout << "  For details:" << endl;
+            cout << "    docs/INVERSE3_PROTOCOL_NOTES.md" << endl;
+            cout << "    docs/USING_OFFICIAL_CHAI3D.md" << endl;
+            cout << "  =============================================" << endl;
+            cout << endl;
+            cout << "  Attempting to continue anyway..." << endl;
+            cout << endl;
+        }
+
         // Check for "no device" placeholder that CHAI3D returns on failure
         if (info.m_modelName == "no device") {
             cout << endl;
@@ -315,10 +422,12 @@ int main(int argc, char* argv[]) {
             cout << "  WARNING: Serial port error (ACCESS_DENIED)." << endl;
             cout << "  =============================================" << endl;
             cout << "  CHAI3D detected a serial port but could not"  << endl;
-            cout << "  open it. This usually means Haply Hub is"     << endl;
-            cout << "  holding the port exclusively."                 << endl;
+            cout << "  open it. This usually means another process"  << endl;
+            cout << "  (e.g., Haply Hub) is holding the port."       << endl;
             cout << endl;
-            cout << "  Fix: Close Haply Hub, then re-launch this app." << endl;
+            cout << "  Fix:" << endl;
+            cout << "    - Close Haply Hub" << endl;
+            cout << "    - Run: .\\run.ps1 (auto-kills background services)" << endl;
             cout << "  =============================================" << endl;
             cout << endl;
             cout << "  Continuing in VISUAL-ONLY mode..." << endl;
@@ -342,6 +451,12 @@ int main(int argc, char* argv[]) {
             cout << "[init] Device calibrated." << endl;
 
             hapticDeviceConnected = true;
+
+            // If Pantograph detected, confirm it's working
+            if (info.m_modelName.find("Pantograph") != std::string::npos) {
+                cout << "[init] Pantograph protocol active." << endl;
+                cout << "[init] Device should work correctly!" << endl;
+            }
         }
     }
 
@@ -384,6 +499,15 @@ int main(int argc, char* argv[]) {
     cout << "    'f'       - Fullscreen" << endl;
     cout << "========================================" << endl;
     cout << endl;
+
+    // Show helpful next steps if no haptics
+    if (!hapticDeviceConnected) {
+        cout << "  💡 Next Steps:" << endl;
+        cout << "     - For Pantograph: Close Haply Hub, run .\\run.ps1" << endl;
+        cout << "     - For Inverse3: Run .\\run-official-demos.ps1" << endl;
+        cout << "     - See docs/ folder for troubleshooting guides" << endl;
+        cout << endl;
+    }
 
     //-----------------------------------------------------------------------
     // MAIN LOOP
