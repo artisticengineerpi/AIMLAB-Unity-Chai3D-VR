@@ -10,7 +10,7 @@ This project integrates CHAI3D haptic framework with Haply Inverse3 device and U
 
 **Author:** Pi Ko (pi.ko@nyu.edu)  
 **Date:** 04 February 2026  
-**Version:** v2.7
+**Version:** v2.8
 
 ---
 
@@ -545,6 +545,12 @@ cmake --build . --config Release
 ---
 
 ## Changelog
+
+### v2.8 - 04 February 2026
+- Fixed emoji encoding issues in src/main.cpp for Windows console compatibility
+- Replaced UTF-8 emojis (✅❌💡⚠️) with ASCII-safe alternatives ([OK], [X], text)
+- Main.cpp updated to v2.1 - console output now displays correctly in PowerShell
+- Resolves garbled character display on Windows terminals
 
 ### v2.7 - 04 February 2026
 - **Major Update:** Enhanced `src/main.cpp` to v2.0 with comprehensive device compatibility documentation

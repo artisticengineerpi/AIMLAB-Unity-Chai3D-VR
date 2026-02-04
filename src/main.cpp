@@ -3,7 +3,7 @@
  * 
  * Author: Pi Ko (pi.ko@nyu.edu)
  * Date: 04 February 2026
- * Version: v2.0
+ * Version: v2.1
  * 
  * Description:
  *   Starter CHAI3D application with Haply haptic device support.
@@ -26,8 +26,8 @@
  *   ----------------------
  *   | Device          | This Build | Official CHAI3D | Protocol           |
  *   |-----------------|------------|-----------------|-------------------|
- *   | Pantograph 2DOF | ✅ YES     | ✅ YES          | Serial (Haply-API)|
- *   | Inverse3 3DOF   | ❌ NO*     | ✅ YES          | Inverse SDK (WS)  |
+ *   | Pantograph 2DOF | YES        | YES             | Serial (Haply-API)|
+ *   | Inverse3 3DOF   | NO*        | YES             | Inverse SDK (WS)  |
  * 
  *   * Inverse3 will be detected but position will always read 0,0,0 due to
  *     protocol mismatch. See docs/INVERSE3_PROTOCOL_NOTES.md for details.
@@ -63,6 +63,7 @@
  *   .\run-official-demos.ps1
  * 
  * Changelog:
+ *   v2.1 - 04 February 2026 - Fixed emoji encoding for Windows console (replaced with ASCII)
  *   v2.0 - 04 February 2026 - Major documentation update: clarified device compatibility,
  *                              protocol limitations, added Inverse3 guidance, reorganized docs
  *   v1.6 - 04 February 2026 - Added position debugging and setShowEnabled(true) for cursor
@@ -173,7 +174,7 @@ void updateGraphics() {
             if (!warnedZeroPosition && frameCount > 300) {  // After 5 seconds @ 60fps
                 if (pos.length() < 0.001) {  // Essentially zero
                     cout << endl;
-                    cout << "  ⚠️  Position is stuck at (0,0,0)" << endl;
+                    cout << "  WARNING: Position is stuck at (0,0,0)" << endl;
                     cout << "  If you have Inverse3, this is a protocol mismatch." << endl;
                     cout << "  Use: .\\run-official-demos.ps1" << endl;
                     cout << "  See: docs/INVERSE3_PROTOCOL_NOTES.md" << endl;
@@ -246,11 +247,11 @@ int main(int argc, char* argv[]) {
     cout << "  AIMLAB Haptics Starter Application"    << endl;
     cout << "  Author: Pi Ko (pi.ko@nyu.edu)"        << endl;
     cout << "  Date:   04 February 2026"              << endl;
-    cout << "  Version: v2.0"                         << endl;
+    cout << "  Version: v2.1"                         << endl;
     cout << "========================================" << endl;
     cout << "  Device Support:"                        << endl;
-    cout << "    ✅ Pantograph (2-DOF)"                << endl;
-    cout << "    ❌ Inverse3 (use official demos)"     << endl;
+    cout << "    [OK] Pantograph (2-DOF)"             << endl;
+    cout << "    [X]  Inverse3 (use official demos)"  << endl;
     cout << "========================================" << endl;
     cout << endl;
 
@@ -322,8 +323,8 @@ int main(int argc, char* argv[]) {
     // HAPTIC DEVICE (with graceful fallback)
     //-----------------------------------------------------------------------
     // NOTE: This build uses the GitHub CHAI3D fork which supports:
-    //   ✅ Haply Pantograph (2-DOF) - works correctly
-    //   ❌ Haply Inverse3 (3-DOF) - protocol mismatch, position always 0,0,0
+    //   [OK] Haply Pantograph (2-DOF) - works correctly
+    //   [X]  Haply Inverse3 (3-DOF) - protocol mismatch, position always 0,0,0
     //
     // For proper Inverse3 support, see:
     //   - docs/INVERSE3_PROTOCOL_NOTES.md (detailed explanation)
@@ -364,8 +365,8 @@ int main(int argc, char* argv[]) {
         cout << "  is disabled." << endl;
         cout << endl;
         cout << "  Device Support:" << endl;
-        cout << "    ✅ Haply Pantograph (2-DOF) - fully supported" << endl;
-        cout << "    ❌ Haply Inverse3 (3-DOF) - use official demos" << endl;
+        cout << "    [OK] Haply Pantograph (2-DOF) - fully supported" << endl;
+        cout << "    [X]  Haply Inverse3 (3-DOF) - use official demos" << endl;
         cout << endl;
         cout << "  For Pantograph:" << endl;
         cout << "    1. Connect device via USB" << endl;
@@ -502,7 +503,7 @@ int main(int argc, char* argv[]) {
 
     // Show helpful next steps if no haptics
     if (!hapticDeviceConnected) {
-        cout << "  💡 Next Steps:" << endl;
+        cout << "  Next Steps:" << endl;
         cout << "     - For Pantograph: Close Haply Hub, run .\\run.ps1" << endl;
         cout << "     - For Inverse3: Run .\\run-official-demos.ps1" << endl;
         cout << "     - See docs/ folder for troubleshooting guides" << endl;
