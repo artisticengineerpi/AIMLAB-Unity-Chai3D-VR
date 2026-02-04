@@ -10,7 +10,7 @@ This project integrates CHAI3D haptic framework with Haply Inverse3 device and U
 
 **Author:** Pi Ko (pi.ko@nyu.edu)  
 **Date:** 04 February 2026  
-**Version:** v1.1
+**Version:** v1.2
 
 ---
 
@@ -43,6 +43,9 @@ AIMLAB-Unity-Chai3D-VR/
 
 1. **Visual Studio 2022** with "Desktop development with C++" workload
 2. **CMake** >= 3.10 (bundled with VS2022 or standalone)
+   ```powershell
+   winget install Kitware.CMake
+   ```
 3. **Git** for Windows
 4. **Haply Hub** and Inverse Service >= 3.1.0
 5. **Haply Inverse3** device (connected, powered, calibrated)
@@ -174,6 +177,9 @@ This comprehensive guide covers:
 ---
 
 ## Changelog
+
+### v1.2 - 04 February 2026
+- Added CMake installation command using winget
 
 ### v1.1 - 04 February 2026
 - Added SSH to HTTPS conversion instructions for submodule initialization
