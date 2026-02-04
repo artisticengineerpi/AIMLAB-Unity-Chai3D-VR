@@ -1,0 +1,3 @@
+[submodule "external/chai3d"]
+	path = external/chai3d
+	url = https://github.com/HaplyHaptics/chai3d.git

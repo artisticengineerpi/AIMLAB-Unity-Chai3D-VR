@@ -10,7 +10,7 @@ This project integrates CHAI3D haptic framework with Haply Inverse3 device and U
 
 **Author:** Pi Ko (pi.ko@nyu.edu)  
 **Date:** 04 February 2026  
-**Version:** v1.0
+**Version:** v1.1
 
 ---
 
@@ -57,6 +57,30 @@ AIMLAB-Unity-Chai3D-VR/
    git submodule update --init --recursive
    cd ../..
    ```
+
+   **⚠️ Important: SSH to HTTPS Conversion**
+   
+   If the submodule initialization fails with an SSH error (common if you don't have SSH keys set up), CHAI3D's nested submodules use SSH URLs. Configure Git to automatically convert SSH to HTTPS:
+   
+   ```powershell
+   # Run this once (global setting)
+   git config --global url."https://github.com/".insteadOf "git@github.com:"
+   ```
+   
+   Then retry the submodule initialization:
+   
+   ```powershell
+   cd external/chai3d
+   git submodule update --init --recursive
+   cd ../..
+   ```
+   
+   This makes Git automatically translate any `git@github.com:` SSH URL into `https://github.com/` before connecting, which works without SSH keys.
+   
+   > **Note:** To undo this later (e.g., after setting up SSH keys), run:
+   > ```powershell
+   > git config --global --unset url."https://github.com/".insteadOf
+   > ```
 
 2. **Build CHAI3D library:**
    ```powershell
@@ -150,6 +174,10 @@ This comprehensive guide covers:
 ---
 
 ## Changelog
+
+### v1.1 - 04 February 2026
+- Added SSH to HTTPS conversion instructions for submodule initialization
+- Troubleshooting note for users without SSH keys configured
 
 ### v1.0 - 04 February 2026
 - Initial project structure
