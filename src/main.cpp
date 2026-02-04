@@ -3,7 +3,7 @@
  * 
  * Author: Pi Ko (pi.ko@nyu.edu)
  * Date: 04 February 2026
- * Version: v1.2
+ * Version: v1.3
  * 
  * Description:
  *   Starter CHAI3D application with Haply Inverse3 haptic device support.
@@ -36,6 +36,7 @@
  *   .\bin\Release\aimlab-haptics.exe
  * 
  * Changelog:
+ *   v1.3 - 04 February 2026 - Changed to use GL/glut.h instead of GL/freeglut.h
  *   v1.2 - 04 February 2026 - Fixed specular property (use m_specular.set() not setSpecularLevel())
  *   v1.1 - 04 February 2026 - Fixed class name from cSphere to cShapeSphere
  *   v1.0 - 04 February 2026 - Initial implementation
@@ -49,12 +50,11 @@
 #include "chai3d.h"
 
 // Platform-specific GLUT includes
-#ifdef _WIN32
-    #include <GL/freeglut.h>    // Windows (bundled with CHAI3D)
-#elif defined(__APPLE__)
+// CHAI3D examples use standard glut.h on all platforms
+#ifdef __APPLE__
     #include <GLUT/glut.h>       // macOS
 #else
-    #include <GL/glut.h>         // Linux
+    #include <GL/glut.h>         // Windows and Linux
 #endif
 
 using namespace chai3d;
