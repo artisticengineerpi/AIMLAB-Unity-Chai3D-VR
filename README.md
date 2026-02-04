@@ -10,7 +10,7 @@ This project integrates CHAI3D haptic framework with Haply Inverse3 device and U
 
 **Author:** Pi Ko (pi.ko@nyu.edu)  
 **Date:** 04 February 2026  
-**Version:** v2.3
+**Version:** v2.4
 
 ---
 
@@ -127,9 +127,73 @@ AIMLAB-Unity-Chai3D-VR/
    This project uses C++14 (not C++17) to maintain compatibility with CHAI3D's bundled Eigen library. CHAI3D's Eigen uses `std::binder1st` and `std::binder2nd`, which were removed in C++17. The CMakeLists.txt is already configured for C++14, so no additional flags are needed.
 
 4. **Run the application:**
+   
+   **Option A: Using the automated run script (Recommended)**
    ```powershell
-   .\bin\Release\aimlab-haptics.exe
+   .\run.ps1
    ```
+   
+   This script automatically:
+   - Kills `haply-inverse-service` process
+   - Stops Haply Hub and related processes
+   - Stops Haply Windows services
+   - Launches your application
+   
+   **Why use this?** The Haply Inverse Service holds exclusive COM port access, causing "error 5 (ACCESS_DENIED)" when CHAI3D tries to connect via HardwareAPI. This script cleans up before launching.
+   
+   **Option B: Manual launch**
+   ```powershell
+   # Kill Haply processes first
+   Stop-Process -Name "haply-inverse-service" -Force -ErrorAction SilentlyContinue
+   
+   # Then run
+   .\build\Release\aimlab-haptics.exe
+   ```
+
+---
+
+## Automation Scripts
+
+This project includes three PowerShell automation scripts for convenience:
+
+### 🔧 **setup-chai3d.ps1** - Initial CHAI3D Setup
+```powershell
+.\setup-chai3d.ps1
+```
+- Clones CHAI3D as git submodule
+- Checks out haply-api-cpp branch
+- Initializes nested submodules
+- Builds CHAI3D library with Haply support
+- **Run once during initial setup** (~15 minutes)
+
+### 🔨 **rebuild.ps1** - Clean Rebuild
+```powershell
+.\rebuild.ps1
+```
+- Deletes `build/` directory
+- Creates fresh build directory
+- Runs CMake configuration
+- Builds project in Release mode
+- Optionally launches app after building
+- **Use when making major changes** (~30-60 seconds)
+
+### ▶️ **run.ps1** - Launch with Process Cleanup
+```powershell
+.\run.ps1
+```
+- Kills Haply processes holding COM port
+- Stops Haply services
+- Launches application
+- **Use every time you run the app** (instant)
+
+### 🔄 **build-project.ps1** - Incremental Build
+```powershell
+.\build-project.ps1
+```
+- Builds without cleaning
+- Faster for small code changes
+- Keeps existing build artifacts
+- **Use for quick iterations** (~10-30 seconds)
 
 ---
 
@@ -398,6 +462,13 @@ cmake --build . --config Release
 ---
 
 ## Changelog
+
+### v2.4 - 04 February 2026
+- Added run.ps1 script with automatic Haply process cleanup
+- Updated rebuild.ps1 to optionally launch app after building
+- Documented all four automation scripts (setup, rebuild, run, build)
+- Added Automation Scripts section to README with usage instructions
+- Resolves COM port ACCESS_DENIED by killing haply-inverse-service automatically
 
 ### v2.3 - 04 February 2026
 - Added graceful device error handling - runs in visual-only mode without device
