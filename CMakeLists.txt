@@ -3,7 +3,7 @@
 #
 # Author: Pi Ko (pi.ko@nyu.edu)
 # Date: 04 February 2026
-# Version: v1.3
+# Version: v1.4
 # 
 # Description:
 #   Top-level CMake configuration for CHAI3D + Haply Inverse3 haptic 
@@ -23,6 +23,7 @@
 #   cmake --build . --config Release
 #
 # Changelog:
+#   v1.4 - 04 February 2026 - Build FreeGLUT from source using add_subdirectory()
 #   v1.3 - 04 February 2026 - Added Windows OpenGL libraries (opengl32, glu32)
 #   v1.2 - 04 February 2026 - Fixed FreeGLUT path (extras/freeglut not external/freeglut)
 #   v1.1 - 04 February 2026 - Changed C++ standard to C++14 for CHAI3D Eigen compatibility
@@ -56,15 +57,17 @@ find_package(CHAI3D REQUIRED)
 include_directories(${CHAI3D_INCLUDE_DIRS})
 
 # ─────────────────────────────────────────────────────────────────────────
-# GLUT/OpenGL Configuration
+# FreeGLUT Configuration (Build from CHAI3D bundled source)
 # ─────────────────────────────────────────────────────────────────────────
 if(WIN32)
-    # On Windows, link against system OpenGL32 and GLU32
-    set(OPENGL_LIBRARIES opengl32 glu32)
+    # Build FreeGLUT as a static library from CHAI3D's bundled source
+    add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/external/chai3d/extras/freeglut 
+                     ${CMAKE_CURRENT_BINARY_DIR}/freeglut)
+    # FreeGLUT exports FREEGLUT_INCLUDE_DIRS and FREEGLUT_LIBRARIES to parent scope
+    include_directories(${FREEGLUT_INCLUDE_DIRS})
 else()
-    find_package(OpenGL REQUIRED)
     find_package(GLUT REQUIRED)
-    set(OPENGL_LIBRARIES ${OPENGL_LIBRARIES} ${GLUT_LIBRARIES})
+    set(FREEGLUT_LIBRARIES ${GLUT_LIBRARIES})
 endif()
 
 # ─────────────────────────────────────────────────────────────────────────
@@ -72,8 +75,8 @@ endif()
 # ─────────────────────────────────────────────────────────────────────────
 add_executable(aimlab-haptics src/main.cpp)
 
-# Link against CHAI3D and OpenGL libraries
-target_link_libraries(aimlab-haptics ${CHAI3D_LIBRARIES} ${OPENGL_LIBRARIES})
+# Link against CHAI3D and FreeGLUT libraries
+target_link_libraries(aimlab-haptics ${CHAI3D_LIBRARIES} ${FREEGLUT_LIBRARIES})
 
 # ─────────────────────────────────────────────────────────────────────────
 # Output Directory Configuration
