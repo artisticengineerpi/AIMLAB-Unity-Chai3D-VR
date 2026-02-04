@@ -3,7 +3,7 @@
  * 
  * Author: Pi Ko (pi.ko@nyu.edu)
  * Date: 04 February 2026
- * Version: v1.5
+ * Version: v1.6
  * 
  * Description:
  *   Starter CHAI3D application with Haply Inverse3 haptic device support.
@@ -39,6 +39,7 @@
  *   .\bin\Release\aimlab-haptics.exe
  * 
  * Changelog:
+ *   v1.6 - 04 February 2026 - Added position debugging and setShowEnabled(true) for cursor
  *   v1.5 - 04 February 2026 - Larger visible cursor (15mm), wider workspace (1.0m) for Pantograph
  *   v1.4 - 04 February 2026 - Graceful no-device handling; runs graphics without haptics
  *   v1.3 - 04 February 2026 - Changed to GL/glut.h, static runtime linkage
@@ -125,6 +126,19 @@ void updateHaptics() {
 
 void updateGraphics() {
     camera->renderView(windowW, windowH);
+
+    // Debug: print tool position to console every ~60 frames
+    if (hapticDeviceConnected) {
+        static int frameCount = 0;
+        if (++frameCount % 60 == 0) {
+            cVector3d pos = tool->getDeviceGlobalPos();
+            cout << "[debug] Tool pos: "
+                 << pos.x() << ", "
+                 << pos.y() << ", "
+                 << pos.z() << endl;
+        }
+    }
+
     glutSwapBuffers();
 
     // Keep redrawing
@@ -345,6 +359,7 @@ int main(int argc, char* argv[]) {
         tool->start();
 
         // Make cursor visible with bright colors
+        tool->setShowEnabled(true);          // Ensure cursor rendering is enabled
         tool->m_hapticPoint->m_sphereProxy->m_material->setWhite();
         tool->m_hapticPoint->m_sphereGoal->m_material->setYellowGold();
 
