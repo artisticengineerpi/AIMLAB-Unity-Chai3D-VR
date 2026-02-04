@@ -10,7 +10,7 @@ This project integrates CHAI3D haptic framework with Haply Inverse3 device and U
 
 **Author:** Pi Ko (pi.ko@nyu.edu)  
 **Date:** 04 February 2026  
-**Version:** v1.3
+**Version:** v1.4
 
 ---
 
@@ -106,8 +106,10 @@ AIMLAB-Unity-Chai3D-VR/
    CMake 4.x dropped support for the old minimum version that CHAI3D's CMakeLists.txt declares. Add the policy override flag that CMake suggests:
    
    ```powershell
-   cmake .. -G "Visual Studio 17 2022" -A x64 -DENABLE_HAPLY_DEVICES=ON -DCMAKE_POLICY_VERSION_MINIMUM=3.5
+   cmake .. -G "Visual Studio 17 2022" -A x64 -DENABLE_HAPLY_DEVICES=ON "-DCMAKE_POLICY_VERSION_MINIMUM=3.5"
    ```
+   
+   **Note:** The quotes around `-DCMAKE_POLICY_VERSION_MINIMUM=3.5` are important! PowerShell splits arguments at the dot (`.`), treating `.5` as a separate path argument. The quotes tell PowerShell to pass it as one complete argument to CMake.
    
    This tells CMake "yes, this project was written for an older CMake, configure it anyway." The CHAI3D code itself compiles fine — it's just the version declaration in their CMakeLists.txt that's outdated.
 
@@ -193,6 +195,10 @@ This comprehensive guide covers:
 ---
 
 ## Changelog
+
+### v1.4 - 04 February 2026
+- Fixed PowerShell quoting for CMake flag to prevent argument splitting at dot
+- Added note explaining why quotes are needed around -DCMAKE_POLICY_VERSION_MINIMUM=3.5
 
 ### v1.3 - 04 February 2026
 - Added CMake 4.x compatibility fix with -DCMAKE_POLICY_VERSION_MINIMUM=3.5 flag
