@@ -10,7 +10,7 @@ This project integrates CHAI3D haptic framework with Haply Inverse3 device and U
 
 **Author:** Pi Ko (pi.ko@nyu.edu)  
 **Date:** 04 February 2026  
-**Version:** v2.5
+**Version:** v2.6
 
 ---
 
@@ -51,7 +51,33 @@ AIMLAB-Unity-Chai3D-VR/
 4. **Haply Hub** and Inverse Service >= 3.1.0
 5. **Haply Inverse3** device (connected, powered, calibrated)
 
-### Setup Steps
+### Official CHAI3D Release (For Inverse3 Support)
+
+**⚠️ IMPORTANT:** The GitHub CHAI3D fork only supports the old Haply Pantograph (2-DOF), NOT Inverse3. For proper Inverse3 support, download the official release:
+
+1. **Download Official CHAI3D v3.3.5:**
+   - Visit: https://develop.haply.co/releases/chai3d
+   - Download: `Chai3D.3.3.5.zip` (Windows Release)
+   - Extract to project root: `AIMLAB-Unity-Chai3D-VR\Chai3D.3.3.5\`
+
+2. **Test Inverse3 with Official Demos:**
+   ```powershell
+   # Run any demo to verify Inverse3 works
+   .\Chai3D.3.3.5\win-x64\01-mydevice.exe
+   .\Chai3D.3.3.5\win-x64\13-primitives.exe
+   .\Chai3D.3.3.5\win-x64\00-GEL-haply.exe  # Haply-specific demo
+   ```
+   
+   **Note:** Official demos work WITH Haply Hub running (uses Inverse SDK, not direct serial).
+
+3. **Available Demos (34 total):**
+   - **Standard CHAI3D:** 01-31 (all core demos)
+   - **GEL Module:** 00-GEL-haply, 01-GEL-membrane, 02-GEL-cell, 03-GEL-duck
+   - **Haply-Specific:** 00-GEL-haply features Inverse3 integration
+
+---
+
+### Alternative: GitHub Fork Setup (For Pantograph or Learning)
 
 1. **Clone CHAI3D as submodule:**
    ```powershell
@@ -177,14 +203,23 @@ This project includes three PowerShell automation scripts for convenience:
 - Optionally launches app after building
 - **Use when making major changes** (~30-60 seconds)
 
-### ▶️ **run.ps1** - Launch with Process Cleanup
+### ▶️ **run.ps1** - Launch Your App with Process Cleanup
 ```powershell
 .\run.ps1
 ```
 - Kills Haply processes holding COM port
 - Stops Haply services
-- Launches application
-- **Use every time you run the app** (instant)
+- Launches YOUR aimlab-haptics.exe
+- **Use for GitHub fork version** (needs Hub closed)
+
+### 🎮 **run-official-demos.ps1** - Launch Official CHAI3D Demos (NEW)
+```powershell
+.\run-official-demos.ps1
+```
+- Interactive menu for official Haply CHAI3D demos
+- 34 demos including Inverse3-specific ones
+- Works WITH Haply Hub running (uses Inverse SDK)
+- **Use to test Inverse3 with official demos**
 
 ### 🔄 **build-project.ps1** - Incremental Build
 ```powershell
@@ -510,6 +545,13 @@ cmake --build . --config Release
 ---
 
 ## Changelog
+
+### v2.6 - 04 February 2026
+- Added official CHAI3D v3.3.5 download instructions to Setup Steps
+- Updated .gitignore to exclude official CHAI3D downloads (too large)
+- Documented 34 pre-built demos including Inverse3-specific ones
+- Clarified official demos work WITH Haply Hub (Inverse SDK)
+- Reorganized setup to prioritize official release for Inverse3 users
 
 ### v2.5 - 04 February 2026
 - Added Issue 11: Protocol mismatch for Inverse3 with solution

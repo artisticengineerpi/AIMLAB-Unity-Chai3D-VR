@@ -23,3 +23,7 @@ cmake_install.cmake
 Thumbs.db
 Desktop.ini
 .DS_Store
+
+# Official CHAI3D Downloads (too large for git)
+Chai3D.*.zip
+Chai3D.*/
