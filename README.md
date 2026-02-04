@@ -10,7 +10,7 @@ This project integrates CHAI3D haptic framework with Haply Inverse3 device and U
 
 **Author:** Pi Ko (pi.ko@nyu.edu)  
 **Date:** 04 February 2026  
-**Version:** v1.6
+**Version:** v2.0
 
 ---
 
@@ -194,6 +194,158 @@ This comprehensive documentation suite covers:
 
 ---
 
+## Common Issues & Solutions
+
+### Issue 1: CMake Not Found After Installation
+
+**Problem:**
+```powershell
+cmake : The term 'cmake' is not recognized...
+```
+
+**Solution:** Refresh PATH in current PowerShell session:
+```powershell
+$env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User")
+cmake --version  # Verify it works
+```
+
+Or close and reopen PowerShell.
+
+---
+
+### Issue 2: Submodule SSH Authentication Failure
+
+**Problem:**
+```
+Host key verification failed.
+fatal: Could not read from remote repository.
+```
+
+**Solution:** Configure Git to convert SSH URLs to HTTPS (already documented in Setup Steps above):
+```powershell
+git config --global url."https://github.com/".insteadOf "git@github.com:"
+git submodule update --init --recursive
+```
+
+---
+
+### Issue 3: CMake 4.x Compatibility Error
+
+**Problem:**
+```
+CMake Error: Compatibility with CMake < 3.5 has been removed from CMake.
+```
+
+**Solution:** Add policy override flag with proper quoting (already documented in Setup Steps above):
+```powershell
+cmake .. -G "Visual Studio 17 2022" -A x64 -DENABLE_HAPLY_DEVICES=ON "-DCMAKE_POLICY_VERSION_MINIMUM=3.5"
+```
+
+**Important:** Quotes around the entire flag prevent PowerShell from splitting at the dot!
+
+---
+
+### Issue 4: Eigen Binder Errors (C++17)
+
+**Problem:**
+```
+error C2039: 'binder1st': is not a member of 'std'
+error C2039: 'binder2nd': is not a member of 'std'
+```
+
+**Solution:** This project uses C++14 (already configured in CMakeLists.txt). CHAI3D's Eigen uses `std::binder1st/binder2nd` which were removed in C++17.
+
+---
+
+### Issue 5: FreeGLUT Header Not Found
+
+**Problem:**
+```
+error C1083: Cannot open include file: 'GL/freeglut.h'
+```
+
+**Solution:** FreeGLUT is automatically built from source by CMakeLists.txt. Make sure you're using the latest version from this repository.
+
+---
+
+### Issue 6: FreeGLUT Library Linker Error
+
+**Problem:**
+```
+LINK : fatal error LNK1181: cannot open input file 'freeglut.lib'
+```
+
+**Solution:** FreeGLUT is built from source using `add_subdirectory()` in CMakeLists.txt (already configured). Clean rebuild:
+```powershell
+Remove-Item -Recurse -Force build
+mkdir build
+cd build
+cmake .. -G "Visual Studio 17 2022" -A x64 "-DCMAKE_POLICY_VERSION_MINIMUM=3.5"
+cmake --build . --config Release
+```
+
+---
+
+### Issue 7: Wrong CHAI3D Class Names
+
+**Problem:**
+```
+error C2061: syntax error: identifier 'cSphere'
+```
+
+**Solution:** Use `cShapeSphere` instead of `cSphere` (already fixed in src/main.cpp).
+
+---
+
+### Issue 8: Specular Material Property Error
+
+**Problem:**
+```
+error: 'class chai3d::cMaterial' has no member named 'setSpecularLevel'
+```
+
+**Solution:** Use direct property access (already fixed in src/main.cpp):
+```cpp
+sphere->m_material->m_specular.set(0.8f, 0.8f, 0.8f);
+```
+
+---
+
+### Issue 9: Device Not Detected
+
+**Problem:**
+```
+Could not open serial port: IO Exception: error code 5
+```
+
+**Cause:** Error code 5 = ACCESS_DENIED
+
+**Solutions:**
+1. **Close Haply Hub** - It locks the COM port (conflicts with CHAI3D's HardwareAPI)
+2. **Check connections:**
+   - USB-C plugged in (LED: red → purple)
+   - 24V power connected
+   - Device calibrated (touch magnet → white LED)
+3. **Run as Administrator** if needed
+
+---
+
+### Quick Troubleshooting Reference
+
+| Error | Quick Fix |
+|-------|-----------|
+| `cmake` not recognized | Refresh PATH: `$env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User")` |
+| SSH submodule failure | `git config --global url."https://github.com/".insteadOf "git@github.com:"` |
+| CMake < 3.5 error | Add flag: `"-DCMAKE_POLICY_VERSION_MINIMUM=3.5"` (with quotes!) |
+| Eigen binder errors | Use C++14 (already set in CMakeLists.txt) |
+| GL/freeglut.h not found | Clean rebuild - FreeGLUT builds automatically |
+| freeglut.lib not found | Clean rebuild - FreeGLUT builds from source |
+| Serial port error 5 | Close Haply Hub before running |
+
+**For detailed troubleshooting:** See [docs/REAL_WORLD_SETUP_GUIDE.md](docs/REAL_WORLD_SETUP_GUIDE.md)
+
+---
+
 ## License
 
 - **CHAI3D core:** BSD 3-Clause
@@ -213,6 +365,13 @@ This comprehensive documentation suite covers:
 ---
 
 ## Changelog
+
+### v2.0 - 04 February 2026
+- Added comprehensive "Common Issues & Solutions" section to README
+- Complete troubleshooting reference table with 9 common issues
+- All real-world problems documented with quick fixes
+- FreeGLUT now builds from source via add_subdirectory()
+- Project is fully functional and tested end-to-end
 
 ### v1.6 - 04 February 2026
 - Fixed FreeGLUT path in CMakeLists.txt (extras/freeglut not external/freeglut)
