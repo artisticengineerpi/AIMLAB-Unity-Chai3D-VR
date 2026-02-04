@@ -10,7 +10,7 @@ This project integrates CHAI3D haptic framework with Haply Inverse3 device and U
 
 **Author:** Pi Ko (pi.ko@nyu.edu)  
 **Date:** 04 February 2026  
-**Version:** v1.2
+**Version:** v1.3
 
 ---
 
@@ -95,6 +95,22 @@ AIMLAB-Unity-Chai3D-VR/
    cd ../../..
    ```
 
+   **⚠️ Important: CMake 4.x Compatibility Fix**
+   
+   If you're using CMake 4.x and encounter this error:
+   ```
+   CMake Error at CMakeLists.txt:44 (cmake_minimum_required):
+     Compatibility with CMake < 3.5 has been removed from CMake.
+   ```
+   
+   CMake 4.x dropped support for the old minimum version that CHAI3D's CMakeLists.txt declares. Add the policy override flag that CMake suggests:
+   
+   ```powershell
+   cmake .. -G "Visual Studio 17 2022" -A x64 -DENABLE_HAPLY_DEVICES=ON -DCMAKE_POLICY_VERSION_MINIMUM=3.5
+   ```
+   
+   This tells CMake "yes, this project was written for an older CMake, configure it anyway." The CHAI3D code itself compiles fine — it's just the version declaration in their CMakeLists.txt that's outdated.
+
 3. **Build this project:**
    ```powershell
    mkdir build
@@ -177,6 +193,10 @@ This comprehensive guide covers:
 ---
 
 ## Changelog
+
+### v1.3 - 04 February 2026
+- Added CMake 4.x compatibility fix with -DCMAKE_POLICY_VERSION_MINIMUM=3.5 flag
+- Troubleshooting note for CHAI3D build with newer CMake versions
 
 ### v1.2 - 04 February 2026
 - Added CMake installation command using winget
