@@ -3,7 +3,7 @@
  * 
  * Author: Pi Ko (pi.ko@nyu.edu)
  * Date: 04 February 2026
- * Version: v1.1
+ * Version: v1.2
  * 
  * Description:
  *   Starter CHAI3D application with Haply Inverse3 haptic device support.
@@ -36,6 +36,7 @@
  *   .\bin\Release\aimlab-haptics.exe
  * 
  * Changelog:
+ *   v1.2 - 04 February 2026 - Fixed specular property (use m_specular.set() not setSpecularLevel())
  *   v1.1 - 04 February 2026 - Fixed class name from cSphere to cShapeSphere
  *   v1.0 - 04 February 2026 - Initial implementation
  * 
@@ -341,7 +342,7 @@ int main(int argc, char* argv[]) {
     
     // Configure visual appearance
     sphere->m_material->setRedCrimson();
-    sphere->m_material->setSpecularLevel(0.8);
+    sphere->m_material->m_specular.set(0.8f, 0.8f, 0.8f);
     sphere->m_material->setShininess(100);
     
     // Enable haptic and graphic rendering
